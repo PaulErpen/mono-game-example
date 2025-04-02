@@ -18,13 +18,13 @@ namespace mono_game_example.Rendering.Renderables
         {
             if (camera == null) throw new ArgumentNullException(nameof(camera));
 
-            foreach (var mesh in _model.Meshes)
+            foreach (ModelMesh mesh in _model.Meshes)
             {
-                foreach (var effect in mesh.Effects)
+                foreach (BasicEffect effect in mesh.Effects)
                 {
-                    effect.Parameters["World"].SetValue(_worldMatrix);
-                    effect.Parameters["View"].SetValue(camera.View);
-                    effect.Parameters["Projection"].SetValue(camera.Projection);
+                    effect.World = _worldMatrix;
+                    effect.View = camera.View;
+                    effect.Projection = camera.Projection;
                 }
 
                 mesh.Draw();
