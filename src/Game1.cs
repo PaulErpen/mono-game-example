@@ -30,7 +30,7 @@ public class Game1 : Game
         // TODO: Add your initialization logic here
 
         base.Initialize();
-        _camera = new Camera(new Vector3(0, 0, 5), Vector3.Zero, Vector3.Up);
+        _camera = new Camera(new Vector3(0, 0, 60), Vector3.Zero, Vector3.Up);
         _renderer = new Renderer(GraphicsDevice, _camera);
     }
 
@@ -46,6 +46,7 @@ public class Game1 : Game
 
         _rootGameObject.AddChild(_planeObject);
         _planeObject.Transform.Parent = _rootGameObject.Transform;
+        _planeObject.Transform.Rotation = Quaternion.CreateFromAxisAngle(Vector3.Left, MathHelper.ToRadians(90)) * Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.ToRadians(90));
     }
 
     protected override void Update(GameTime gameTime)
@@ -53,11 +54,29 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        _planeObject.Transform.Position += new Vector3(0, 0, -0.1f);
+        // Get the keyboard state
+    KeyboardState keyboardState = Keyboard.GetState();
+
+    // Movement speed
+    float speed = 5f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+    // Update plane position based on WASD input
+    Vector3 movement = Vector3.Zero;
+
+    if (keyboardState.IsKeyDown(Keys.W))
+        movement.Y += speed; // Move up
+    if (keyboardState.IsKeyDown(Keys.S))
+        movement.Y -= speed; // Move down
+    if (keyboardState.IsKeyDown(Keys.A))
+        movement.X -= speed; // Move left
+    if (keyboardState.IsKeyDown(Keys.D))
+        movement.X += speed; // Move right
+
+    _planeObject.Transform.Position += movement;
 
         // TODO: Add your update logic here
         _rootGameObject.UpdateWorldMatrix();
-        
+
         base.Update(gameTime);
     }
 
@@ -69,7 +88,7 @@ public class Game1 : Game
         _spriteBatch.Begin();
         // Draw the model
         _renderer.Render(_modelRenderable, gameTime);
-        
+
 
         _spriteBatch.End();
 
