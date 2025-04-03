@@ -1,18 +1,19 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using mono_game_example.Scene;
 
 namespace mono_game_example.Rendering.Renderables
 {
     public class ModelRenderable : IRenderable
     {
         private readonly Model _model;
-        private readonly Matrix _worldMatrix;
+        private readonly GameObject _gameObject;
 
-        public ModelRenderable(Model model, Matrix worldMatrix)
+        public ModelRenderable(Model model, GameObject gameObject)
         {
             _model = model ?? throw new ArgumentNullException(nameof(model));
-            _worldMatrix = worldMatrix;
+            _gameObject = gameObject;
         }
         public void Draw(GameTime gameTime, Camera camera)
         {
@@ -22,7 +23,7 @@ namespace mono_game_example.Rendering.Renderables
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
-                    effect.World = _worldMatrix;
+                    effect.World = _gameObject.Transform.WorldMatrix;
                     effect.View = camera.View;
                     effect.Projection = camera.Projection;
                 }

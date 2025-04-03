@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using mono_game_example.Rendering;
 using mono_game_example.Rendering.Renderables;
+using mono_game_example.Scene;
 
 namespace mono_game_example;
 
@@ -14,6 +15,8 @@ public class Game1 : Game
     private Renderer _renderer;
     private Camera _camera;
     private ModelRenderable _modelRenderable;
+    private GameObject _rootGameObject;
+    private GameObject _planeObject = new GameObject("Plane");
 
     public Game1()
     {
@@ -35,9 +38,14 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+        _rootGameObject = new GameObject("Root");
+
         // TODO: use this.Content to load your game content here
         _model = Content.Load<Model>("plane");
-        _modelRenderable = new ModelRenderable(_model, Matrix.CreateTranslation(Vector3.Zero));
+        _modelRenderable = new ModelRenderable(_model, _planeObject);
+
+        _rootGameObject.AddChild(_planeObject);
+        _planeObject.Transform.Parent = _rootGameObject.Transform;
     }
 
     protected override void Update(GameTime gameTime)
@@ -45,7 +53,10 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
+        _planeObject.Transform.Position += new Vector3(0, 0, -0.1f);
+
         // TODO: Add your update logic here
+        _rootGameObject.UpdateWorldMatrix();
         
         base.Update(gameTime);
     }
