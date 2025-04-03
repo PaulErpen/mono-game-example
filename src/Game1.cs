@@ -55,29 +55,53 @@ public class Game1 : Game
             Exit();
 
         // Get the keyboard state
-    KeyboardState keyboardState = Keyboard.GetState();
+        KeyboardState keyboardState = Keyboard.GetState();
 
-    // Movement speed
-    float speed = 5f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        // Movement speed
+        float speed = 20f * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-    // Update plane position based on WASD input
-    Vector3 movement = Vector3.Zero;
+        // Update plane position based on WASD input
+        Vector3 movement = Vector3.Zero;
 
-    if (keyboardState.IsKeyDown(Keys.W))
-        movement.Y += speed; // Move up
-    if (keyboardState.IsKeyDown(Keys.S))
-        movement.Y -= speed; // Move down
-    if (keyboardState.IsKeyDown(Keys.A))
-        movement.X -= speed; // Move left
-    if (keyboardState.IsKeyDown(Keys.D))
-        movement.X += speed; // Move right
+        if (keyboardState.IsKeyDown(Keys.W))
+            movement.Y += speed; // Move up
+        if (keyboardState.IsKeyDown(Keys.S))
+            movement.Y -= speed; // Move down
+        if (keyboardState.IsKeyDown(Keys.A))
+            movement.X -= speed; // Move left
+        if (keyboardState.IsKeyDown(Keys.D))
+            movement.X += speed; // Move right
 
-    _planeObject.Transform.Position += movement;
+        Vector3 extent = ScreenToWorld(new Vector2(1, 1), 60, GraphicsDevice, _camera);
+
+        _planeObject.Transform.Position = new Vector3(
+            MathHelper.Clamp(_planeObject.Transform.Position.X + movement.X, extent.X, -extent.X),
+            MathHelper.Clamp(_planeObject.Transform.Position.Y + movement.Y, -extent.Y, extent.Y),
+            _planeObject.Transform.Position.Z
+        );
 
         // TODO: Add your update logic here
         _rootGameObject.UpdateWorldMatrix();
 
         base.Update(gameTime);
+    }
+
+    public Vector3 ScreenToWorld(Vector2 screenPosition, float worldDepth, GraphicsDevice graphicsDevice, Camera camera)
+    {
+        // Get the viewport from the graphics device
+        Viewport viewport = graphicsDevice.Viewport;
+
+        // Convert screen position to a 3D vector with a depth value
+        Vector3 screenSpaceNear = new Vector3(screenPosition, 0f); // Near plane (Z = 0)
+        Vector3 screenSpaceFar = new Vector3(screenPosition, 1f);  // Far plane (Z = 1)
+
+        // Unproject screen coordinates into world space
+        Vector3 worldNear = viewport.Unproject(screenSpaceNear, camera.Projection, camera.View, Matrix.Identity);
+        Vector3 worldFar = viewport.Unproject(screenSpaceFar, camera.Projection, camera.View, Matrix.Identity);
+
+        // Compute a world space point at the given depth along the ray
+        Vector3 direction = Vector3.Normalize(worldFar - worldNear);
+        return worldNear + direction * worldDepth;
     }
 
     protected override void Draw(GameTime gameTime)
