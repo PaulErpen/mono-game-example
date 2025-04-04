@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using mono_game_example.Rendering;
@@ -30,7 +31,7 @@ public class Game1 : Game
         // TODO: Add your initialization logic here
 
         base.Initialize();
-        _camera = new Camera(new Vector3(0, 0, 60), Vector3.Zero, Vector3.Up);
+        _camera = new Camera(new Vector3(0, 0, 80), Vector3.Zero, Vector3.Up);
         _renderer = new Renderer(GraphicsDevice, _camera);
     }
 
@@ -72,7 +73,11 @@ public class Game1 : Game
         if (keyboardState.IsKeyDown(Keys.D))
             movement.X += speed; // Move right
 
-        Vector3 extent = ScreenToWorld(new Vector2(1, 1), 60, GraphicsDevice, _camera);
+        
+        Vector3 extent = _camera.ScreenToWorld(
+            new Vector2(0, 0), 
+            80, 
+            GraphicsDevice);
 
         _planeObject.Transform.Position = new Vector3(
             MathHelper.Clamp(_planeObject.Transform.Position.X + movement.X, extent.X, -extent.X),
@@ -86,23 +91,7 @@ public class Game1 : Game
         base.Update(gameTime);
     }
 
-    public Vector3 ScreenToWorld(Vector2 screenPosition, float worldDepth, GraphicsDevice graphicsDevice, Camera camera)
-    {
-        // Get the viewport from the graphics device
-        Viewport viewport = graphicsDevice.Viewport;
-
-        // Convert screen position to a 3D vector with a depth value
-        Vector3 screenSpaceNear = new Vector3(screenPosition, 0f); // Near plane (Z = 0)
-        Vector3 screenSpaceFar = new Vector3(screenPosition, 1f);  // Far plane (Z = 1)
-
-        // Unproject screen coordinates into world space
-        Vector3 worldNear = viewport.Unproject(screenSpaceNear, camera.Projection, camera.View, Matrix.Identity);
-        Vector3 worldFar = viewport.Unproject(screenSpaceFar, camera.Projection, camera.View, Matrix.Identity);
-
-        // Compute a world space point at the given depth along the ray
-        Vector3 direction = Vector3.Normalize(worldFar - worldNear);
-        return worldNear + direction * worldDepth;
-    }
+    
 
     protected override void Draw(GameTime gameTime)
     {
