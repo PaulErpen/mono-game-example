@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using MonoGameExample.Component;
 
 namespace MonoGameExample.Scene
@@ -35,6 +36,30 @@ namespace MonoGameExample.Scene
             foreach (var child in Children)
             {
                 child.UpdateWorldMatrix(Transform);
+            }
+        }
+
+        public void Initialize()
+        {
+            foreach (var component in Components)
+            {
+                component.Initialize();
+            }
+            foreach (var child in Children)
+            {
+                child.Initialize();
+            }
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            foreach (var component in Components)
+            {
+                component.Update(gameTime);
+            }
+            foreach (var child in Children)
+            {
+                child.Update(gameTime);
             }
         }
     }
