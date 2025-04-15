@@ -1,9 +1,9 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using mono_game_example.Scene;
+using MonoGameExample.Scene;
 
-namespace mono_game_example.Rendering.Renderables
+namespace MonoGameExample.Rendering.Renderables
 {
     public class ModelRenderable : IRenderable
     {

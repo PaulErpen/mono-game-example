@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace mono_game_example.Rendering
+namespace MonoGameExample.Rendering
 {
     public interface IRenderable
     {

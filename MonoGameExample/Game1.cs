@@ -1,11 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using mono_game_example.Rendering;
-using mono_game_example.Rendering.Renderables;
-using mono_game_example.Scene;
+using MonoGameExample.Rendering;
+using MonoGameExample.Rendering.Renderables;
+using MonoGameExample.Scene;
 
-namespace mono_game_example;
+namespace MonoGameExample;
 
 public class Game1 : Game
 {
@@ -45,7 +45,6 @@ public class Game1 : Game
         _modelRenderable = new ModelRenderable(_model, _planeObject);
 
         _rootGameObject.AddChild(_planeObject);
-        _planeObject.Transform.Parent = _rootGameObject.Transform;
         _planeObject.Transform.Rotation = Quaternion.CreateFromAxisAngle(Vector3.Left, MathHelper.ToRadians(90)) * Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.ToRadians(90));
     }
 
@@ -85,7 +84,7 @@ public class Game1 : Game
         );
 
         // TODO: Add your update logic here
-        _rootGameObject.UpdateWorldMatrix();
+        _rootGameObject.UpdateWorldMatrix(null);
 
         base.Update(gameTime);
     }
@@ -99,6 +98,7 @@ public class Game1 : Game
         // TODO: Add your drawing code here
         _spriteBatch.Begin();
         // Draw the model
+        _renderer.Clear(Color.CornflowerBlue);
         _renderer.Render(_modelRenderable, gameTime);
 
 

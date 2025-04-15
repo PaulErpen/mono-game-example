@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
+using MonoGameExample.Component;
 
-namespace mono_game_example.Scene
+namespace MonoGameExample.Scene
 {
     public class GameObject
     {
         public string Name { get; set; }
-        public Transform Transform { get; set; } = new Transform();
+        public Transform Transform { get; set; } = new Transform(null);
+        public List<IComponent> Components { get; } = new List<IComponent>();
         public List<GameObject> Children { get; } = new List<GameObject>();
 
         public GameObject(string name)
@@ -17,22 +19,22 @@ namespace mono_game_example.Scene
         public void AddChild(GameObject child)
         {
             if (child == null) throw new ArgumentNullException(nameof(child));
-            child.Transform.Parent = Transform;
             Children.Add(child);
         }
 
         public void RemoveChild(GameObject child)
         {
             if (child == null) throw new ArgumentNullException(nameof(child));
-            child.Transform.Parent = null;
             Children.Remove(child);
         }
-        public void UpdateWorldMatrix()
+
+        public void UpdateWorldMatrix(Transform Parent)
         {
-            Transform.UpdateWorldMatrix();
+            Transform.UpdateWorldMatrix(Parent);
+
             foreach (var child in Children)
             {
-                child.UpdateWorldMatrix();
+                child.UpdateWorldMatrix(Transform);
             }
         }
     }

@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace mono_game_example.Rendering
+namespace MonoGameExample.Rendering
 {
     public class Renderer
     {
@@ -15,11 +15,15 @@ namespace mono_game_example.Rendering
             _camera = camera ?? throw new ArgumentNullException(nameof(camera));
         }
 
+        public void Clear(Color color)
+        {
+            _graphicsDevice.Clear(color);
+        }
+
         public void Render(IRenderable renderable, GameTime gameTime)
         {
             if (renderable == null) throw new ArgumentNullException(nameof(renderable));
 
-            _graphicsDevice.Clear(Color.CornflowerBlue);
             renderable.Draw(gameTime, _camera);
         }
     }

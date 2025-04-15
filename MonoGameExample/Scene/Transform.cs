@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace mono_game_example.Scene
+namespace MonoGameExample.Scene
 {
     public class Transform
     {
@@ -8,15 +8,14 @@ namespace mono_game_example.Scene
         public Quaternion Rotation { get; set; } = Quaternion.Identity;
         public Vector3 Scale { get; set; } = Vector3.One;
 
-        public Transform Parent { get; set; } // Parent node
         public Matrix WorldMatrix { get; private set; }
 
-        public Transform()
+        public Transform(Transform Parent)
         {
-            UpdateWorldMatrix();
+            UpdateWorldMatrix(Parent);
         }
 
-        public void UpdateWorldMatrix()
+        public void UpdateWorldMatrix(Transform Parent)
         {
             // Create Local Transformation Matrix
             Matrix localMatrix =

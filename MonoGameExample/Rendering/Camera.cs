@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace mono_game_example.Rendering
+namespace MonoGameExample.Rendering
 {
     public class Camera
     {
