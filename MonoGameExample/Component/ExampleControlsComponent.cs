@@ -20,13 +20,13 @@ namespace MonoGameExample.Component
             // Initialization logic if needed
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(FrameContext frameContext)
         {
             // Get the keyboard state
             KeyboardState keyboardState = Keyboard.GetState();
 
             // Movement speed
-            float speed = _speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float speed = _speed * (float)frameContext.GameTime.ElapsedGameTime.TotalSeconds;
 
             // Update plane position based on WASD input
             Vector3 movement = Vector3.Zero;

@@ -71,10 +71,10 @@ public class Game1 : Game
         if (keyboardState.IsKeyDown(Keys.D))
             movement.X += speed; // Move right
 
-        
+
         Vector3 extent = _camera.ScreenToWorld(
-            new Vector2(0, 0), 
-            80, 
+            new Vector2(0, 0),
+            80,
             GraphicsDevice);
 
         _planeObject.Transform.Position = new Vector3(
@@ -89,7 +89,7 @@ public class Game1 : Game
         base.Update(gameTime);
     }
 
-    
+
 
     protected override void Draw(GameTime gameTime)
     {

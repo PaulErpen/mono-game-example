@@ -5,7 +5,8 @@ using MonoGameExample.Scene;
 
 namespace MonoGameExample.Component
 {
-    public class FrameContext {
+    public class FrameContext
+    {
         public GameTime GameTime { get; }
         public Camera Camera { get; }
         public GraphicsDevice GraphicsDevice { get; }
