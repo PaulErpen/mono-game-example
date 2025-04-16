@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGameExample.Component;
 using MonoGameExample.Rendering;
+using MonoGameExample.Rendering.GraphicsDeviceWrapper;
 using MonoGameExample.Rendering.Renderables;
 using MonoGameExample.Scene;
 
@@ -32,6 +34,8 @@ public class Game1 : Game
         base.Initialize();
         _camera = new Camera(new Vector3(0, 0, 80), Vector3.Zero, Vector3.Up);
         _renderer = new Renderer(GraphicsDevice, _camera);
+
+        _planeObject.Components.Add(new ExampleControlsComponent(10f));
     }
 
     protected override void LoadContent()
@@ -53,37 +57,9 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        // Get the keyboard state
-        KeyboardState keyboardState = Keyboard.GetState();
-
-        // Movement speed
-        float speed = 20f * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-        // Update plane position based on WASD input
-        Vector3 movement = Vector3.Zero;
-
-        if (keyboardState.IsKeyDown(Keys.W))
-            movement.Y += speed; // Move up
-        if (keyboardState.IsKeyDown(Keys.S))
-            movement.Y -= speed; // Move down
-        if (keyboardState.IsKeyDown(Keys.A))
-            movement.X -= speed; // Move left
-        if (keyboardState.IsKeyDown(Keys.D))
-            movement.X += speed; // Move right
-
-
-        Vector3 extent = _camera.ScreenToWorld(
-            new Vector2(0, 0),
-            80,
-            GraphicsDevice);
-
-        _planeObject.Transform.Position = new Vector3(
-            MathHelper.Clamp(_planeObject.Transform.Position.X + movement.X, extent.X, -extent.X),
-            MathHelper.Clamp(_planeObject.Transform.Position.Y + movement.Y, -extent.Y, extent.Y),
-            _planeObject.Transform.Position.Z
-        );
 
         // TODO: Add your update logic here
+        _rootGameObject.Update(gameTime, _camera, new GraphicsDeviceWrapper(GraphicsDevice));
         _rootGameObject.UpdateWorldMatrix(null);
 
         base.Update(gameTime);

@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using MonoGameExample.Component;
+using MonoGameExample.Rendering;
+using MonoGameExample.Rendering.GraphicsDeviceWrapper;
 
 namespace MonoGameExample.Scene
 {
@@ -51,15 +53,16 @@ namespace MonoGameExample.Scene
             }
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, Camera camera, IGraphicsDeviceWrapper graphicsDevice)
         {
+            var frameContext = new FrameContext(gameTime, camera, graphicsDevice, this);
             foreach (var component in Components)
             {
-                component.Update(gameTime);
+                component.Update(frameContext);
             }
             foreach (var child in Children)
             {
-                child.Update(gameTime);
+                child.Update(gameTime, camera, graphicsDevice);
             }
         }
     }

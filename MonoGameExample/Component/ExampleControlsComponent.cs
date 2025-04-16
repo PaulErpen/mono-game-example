@@ -1,17 +1,14 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using MonoGameExample.Scene;
 
 namespace MonoGameExample.Component
 {
     public class ExampleControlsComponent : IComponent
     {
-        private GameObject _gameObject;
         private float _speed;
 
-        public ExampleControlsComponent(GameObject gameObject, float speed)
+        public ExampleControlsComponent(float speed)
         {
-            _gameObject = gameObject;
             _speed = speed;
         }
 
@@ -32,16 +29,24 @@ namespace MonoGameExample.Component
             Vector3 movement = Vector3.Zero;
 
             if (keyboardState.IsKeyDown(Keys.W))
-                movement += Vector3.Forward;
+                movement.Y += speed; // Move up
             if (keyboardState.IsKeyDown(Keys.S))
-                movement += Vector3.Backward;
+                movement.Y -= speed; // Move down
             if (keyboardState.IsKeyDown(Keys.A))
-                movement += Vector3.Left;
+                movement.X -= speed; // Move left
             if (keyboardState.IsKeyDown(Keys.D))
-                movement += Vector3.Right;
+                movement.X += speed; // Move right
 
-            // Apply the movement to the game object's position
-            _gameObject.Transform.Position += movement * speed;
+            Vector3 extent = frameContext.Camera.ScreenToWorld(
+                new Vector2(0, 0),
+                80,
+                frameContext.GraphicsDeviceWrapper.GraphicsDevice);
+
+            frameContext.GameObject.Transform.Position = new Vector3(
+                MathHelper.Clamp(frameContext.GameObject.Transform.Position.X + movement.X, extent.X, -extent.X),
+                MathHelper.Clamp(frameContext.GameObject.Transform.Position.Y + movement.Y, -extent.Y, extent.Y),
+                frameContext.GameObject.Transform.Position.Z
+            );
         }
     }
 }
