@@ -7,25 +7,25 @@ using MonoGameExample.Rendering.GraphicsDeviceWrapper;
 
 namespace MonoGameExample.Scene
 {
-    public class GameObject
+    public class GameObject : SceneNode
     {
         public string Name { get; set; }
         public Transform Transform { get; set; } = new Transform(null);
         public List<IComponent> Components { get; } = new List<IComponent>();
-        public List<GameObject> Children { get; } = new List<GameObject>();
+        public List<SceneNode> Children { get; } = new List<SceneNode>();
 
         public GameObject(string name)
         {
             Name = name;
         }
 
-        public void AddChild(GameObject child)
+        public void AddChild(SceneNode child)
         {
             if (child == null) throw new ArgumentNullException(nameof(child));
             Children.Add(child);
         }
 
-        public void RemoveChild(GameObject child)
+        public void RemoveChild(SceneNode child)
         {
             if (child == null) throw new ArgumentNullException(nameof(child));
             Children.Remove(child);
@@ -62,7 +62,10 @@ namespace MonoGameExample.Scene
             }
             foreach (var child in Children)
             {
-                child.Update(gameTime, camera, graphicsDevice);
+                if (child is GameObject gameObject)
+                {
+                    gameObject.Update(gameTime, camera, graphicsDevice);
+                }
             }
         }
     }

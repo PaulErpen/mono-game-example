@@ -1,26 +1,55 @@
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGameExample.Scene;
 
 namespace MonoGameExample.Rendering
 {
-    public class Camera
+    public class Camera : SceneNode
     {
+        public bool Active { get; set; }
+        public string Name { get; set; }
         public Matrix View { get; private set; }
         public Matrix Projection { get; private set; }
-        public Vector3 Position { get; private set; }
+        public Transform Transform { get; set; }
         public Vector3 Target { get; private set; }
-        public Vector3 Up { get; private set; }
-        public float Fov { get; private set; } = 45f;
+        public float AspectRatio { get; private set; }
+        public float Fov { get; private set; }
+        public float NearPlaneDistance { get; private set; }
+        public float FarPlaneDistance { get; private set; }
 
-        public Camera(Vector3 position, Vector3 target, Vector3 up)
+
+        public Camera(string name, bool active)
+            : this(name, active, 45f, 16f / 9f, 0.1f, 1000f)
+        { }
+
+        public Camera(string name, bool active, float fov, float aspectRatio, float nearPlaneDistance, float farPlaneDistance)
         {
-            Position = position;
-            Target = target;
-            Up = up;
+            Active = active;
+            Name = name;
+            Fov = fov;
+            AspectRatio = aspectRatio;
+            NearPlaneDistance = nearPlaneDistance;
+            FarPlaneDistance = farPlaneDistance;
 
-            View = Matrix.CreateLookAt(Position, Target, Up);
-            Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(Fov), 1.33f, 0.1f, 100f);
+            Transform = new Transform(null);
+
+            Projection = Matrix.CreatePerspectiveFieldOfView(
+                MathHelper.ToRadians(Fov),
+                AspectRatio,
+                NearPlaneDistance,
+                FarPlaneDistance);
+        }
+
+        public void UpdateViewProjection(Transform parent)
+        {
+            Transform.UpdateWorldMatrix(parent);
+
+            Vector3 position = Transform.WorldMatrix.Translation;
+            Vector3 forward = Vector3.Transform(Vector3.Forward, Transform.WorldMatrix);
+            Vector3 up = Vector3.Transform(Vector3.Up, Transform.WorldMatrix);
+
+            View = Matrix.CreateLookAt(position, position + forward, up);
+            Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(Fov), AspectRatio, NearPlaneDistance, FarPlaneDistance);
         }
 
         public Vector3 ScreenToWorld(Vector2 screenPosition, float worldDepth, GraphicsDevice graphicsDevice)
@@ -42,6 +71,16 @@ namespace MonoGameExample.Rendering
             Vector3 direction = Vector3.Normalize(worldFar - worldNear);
             var scale = float.Abs(1 / direction.Z);
             return worldNear + direction * worldDepth * scale;
+        }
+
+        public void Initialize()
+        {
+            UpdateViewProjection(null);
+        }
+
+        public void UpdateWorldMatrix(Transform Parent)
+        {
+            UpdateViewProjection(Parent);
         }
     }
 }

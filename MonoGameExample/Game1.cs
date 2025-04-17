@@ -32,7 +32,10 @@ public class Game1 : Game
         // TODO: Add your initialization logic here
 
         base.Initialize();
-        _camera = new Camera(new Vector3(0, 0, 80), Vector3.Zero, Vector3.Up);
+        _camera = new Camera("Camera", true);
+        _camera.Transform.Position = new Vector3(0, 0, 80);
+        _rootGameObject.AddChild(_camera);
+
         _renderer = new Renderer(GraphicsDevice, _camera);
 
         _planeObject.Components.Add(new ExampleControlsComponent(10f));
@@ -50,6 +53,7 @@ public class Game1 : Game
 
         _rootGameObject.AddChild(_planeObject);
         _planeObject.Transform.Rotation = Quaternion.CreateFromAxisAngle(Vector3.Left, MathHelper.ToRadians(90)) * Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.ToRadians(90));
+
     }
 
     protected override void Update(GameTime gameTime)
