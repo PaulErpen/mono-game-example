@@ -39,7 +39,7 @@ namespace MonoGameExample.Component
 
             Vector3 extent = frameContext.Camera.ScreenToWorld(
                 new Vector2(0, 0),
-                80,
+                frameContext.GameObject.Transform.Position.Z * -1,
                 frameContext.GraphicsDeviceWrapper.GraphicsDevice);
 
             frameContext.GameObject.Transform.Position = new Vector3(
