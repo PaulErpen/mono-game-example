@@ -33,7 +33,7 @@ public class Game1 : Game
 
         base.Initialize();
         _camera = new Camera("Camera", true);
-        _camera.Transform.Position = new Vector3(0, 0, 80);
+        _camera.Transform.Position = new Vector3(0, 0, 0);
         _rootGameObject.AddChild(_camera);
 
         _renderer = new Renderer(GraphicsDevice, _camera);
@@ -52,7 +52,9 @@ public class Game1 : Game
         _modelRenderable = new ModelRenderable(_model, _planeObject);
 
         _rootGameObject.AddChild(_planeObject);
+        _planeObject.Transform.Position = new Vector3(0, 0, -20);
         _planeObject.Transform.Rotation = Quaternion.CreateFromAxisAngle(Vector3.Left, MathHelper.ToRadians(90)) * Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.ToRadians(90));
+        _planeObject.Transform.Scale = new Vector3(0.1f, 0.1f, 0.1f);
 
     }
 

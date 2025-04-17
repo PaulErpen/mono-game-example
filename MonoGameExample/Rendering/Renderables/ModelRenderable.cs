@@ -23,7 +23,7 @@ namespace MonoGameExample.Rendering.Renderables
             {
                 foreach (BasicEffect effect in mesh.Effects)
                 {
-                    effect.World = _gameObject.Transform.WorldMatrix;
+                    effect.World = _gameObject.Transform.WorldMatrix * camera.Transform.WorldMatrix;
                     effect.View = camera.View;
                     effect.Projection = camera.Projection;
                 }
